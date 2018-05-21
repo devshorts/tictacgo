@@ -19,8 +19,6 @@ func Play(players []players.Player, boardSize int) {
 		for _, player := range players {
 			printBoard()
 
-			fmt.Printf("Player %s make your move\n", player.Id())
-
 			board.PutToken(player.Token(), player.GetMove(board))
 
 			if board.IsGameOver() {

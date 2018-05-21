@@ -31,7 +31,7 @@ func init() {
 func main() {
 	players := []players.Player{
 		players.NewHumanPlayer(data.X, "Anton"),
-		players.NewHumanPlayer(data.O, "Bob"),
+		players.NewRandomComputer(data.O),
 	}
 
 	game.Play(players, 3)
