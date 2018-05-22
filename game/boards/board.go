@@ -27,7 +27,7 @@ func NewBoard(size int) *Board {
 }
 
 func (b *Board) CanPlace(p data.Position) bool {
-	return !b.tokens[p.X][p.Y].IsSet()
+	return !b.get(p.X, p.Y).IsSet()
 }
 
 func (b *Board) Print(w io.Writer) {
@@ -58,7 +58,7 @@ func (b *Board) PutToken(token data.Token, position data.Position) error {
 }
 
 func (b *Board) colWinner(col int) (*data.Token, error) {
-	prevPlayer := b.tokens[col][0]
+	prevPlayer := b.get(col, 0)
 
 	if !prevPlayer.IsSet() {
 		return nil, noWinExists
@@ -74,14 +74,14 @@ func (b *Board) colWinner(col int) (*data.Token, error) {
 }
 
 func (b *Board) rowWinner(row int) (*data.Token, error) {
-	prevPlayer := b.tokens[0][row]
+	prevPlayer := b.get(0, row)
 
 	if !prevPlayer.IsSet() {
 		return nil, noWinExists
 	}
 
 	for i := range b.tokens {
-		currentPlayer := b.tokens[i][row]
+		currentPlayer := b.get(i, row)
 		if currentPlayer != prevPlayer || !currentPlayer.IsSet() {
 			return nil, noWinExists
 		}
@@ -92,14 +92,14 @@ func (b *Board) rowWinner(row int) (*data.Token, error) {
 
 func (b *Board) diagonalWinner() (*data.Token, error) {
 	rightToLeft := func() (*data.Token, error) {
-		prevPlayer := b.tokens[0][b.Size-1]
+		prevPlayer := b.get(0, b.Size-1)
 
 		if !prevPlayer.IsSet() {
 			return nil, noWinExists
 		}
 
 		for i := range b.tokens {
-			if b.tokens[i][b.Size-i-1] != prevPlayer {
+			if b.get(i, b.Size-i-1) != prevPlayer {
 				return nil, noWinExists
 			}
 		}
@@ -110,7 +110,7 @@ func (b *Board) diagonalWinner() (*data.Token, error) {
 	prevPlayer := b.tokens[0][0]
 
 	for i := range b.tokens {
-		if b.tokens[i][i] != prevPlayer {
+		if b.get(i, i) != prevPlayer {
 			winner, err := rightToLeft()
 			if err == nil {
 				return winner, nil
@@ -125,6 +125,10 @@ func (b *Board) diagonalWinner() (*data.Token, error) {
 	}
 
 	return &prevPlayer, nil
+}
+
+func (b *Board) get(x, y int) data.Token {
+	return b.tokens[x][y]
 }
 
 func (b *Board) IsGameOver() bool {

@@ -29,10 +29,10 @@ func init() {
 }
 
 func main() {
-	players := []players.Player{
+	gamePlayers := []players.Player{
 		players.NewHumanPlayer(data.X, "Anton"),
 		players.NewRandomComputer(data.O),
 	}
 
-	game.Play(players, 3)
+	game.Play(gamePlayers, 3)
 }
